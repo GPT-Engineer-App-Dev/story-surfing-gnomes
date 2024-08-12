@@ -15,7 +15,7 @@ const fetchTopStories = async (page) => {
   return response.json();
 };
 
-const HackerNewsList = ({ searchTerm }) => {
+const HackerNewsList = () => {
   const [page, setPage] = useState(0);
 
   const { data, isLoading, error, isPreviousData } = useQuery({
@@ -26,16 +26,14 @@ const HackerNewsList = ({ searchTerm }) => {
 
   if (error) return <div className="text-red-500 text-center">Error: {error.message}</div>;
 
-  const filteredStories = data?.hits.filter(story =>
-    story.title.toLowerCase().includes(searchTerm.toLowerCase())
-  ) || [];
+  const stories = data?.hits || [];
 
   return (
     <div>
       <div className="space-y-4 mb-8">
         {isLoading
           ? Array(STORIES_PER_PAGE).fill().map((_, index) => <StoryCardSkeleton key={index} />)
-          : filteredStories.map(story => <StoryCard key={story.objectID} story={story} />)
+          : stories.map(story => <StoryCard key={story.objectID} story={story} />)
         }
       </div>
       <div className="flex justify-between items-center">
